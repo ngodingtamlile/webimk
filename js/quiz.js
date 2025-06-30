@@ -55,6 +55,12 @@ function startTimer() {
 
 function checkAnswer(selectedKey) {
   clearInterval(timer);
+
+  const optionsContainer = document.getElementById("answerOptions");
+  Array.from(optionsContainer.children).forEach((btn) => {
+    btn.disabled = true; // Matikan semua tombol
+  });
+
   const q = questions[currentQuestionIndex];
   const isCorrect = selectedKey === q.answer;
 
@@ -74,7 +80,11 @@ function showFeedback(isCorrect, isTimeout) {
 
   setTimeout(() => {
     feedback.style.display = "none";
-    nextQuestion();
+    if (currentQuestionIndex >= questions.length - 1) {
+      showResult(); // langsung tampilkan hasil kalau sudah soal terakhir
+    } else {
+      nextQuestion(); // lanjut soal berikutnya
+    }
   }, 4000);
 }
 
@@ -92,6 +102,7 @@ function showResult() {
   const name = loadFromStorage("userName") || "Mahasiswa";
   const avatar = loadFromStorage("userAvatar") || "img/default.png";
   const score = currentScore;
+  clearInterval(timer);
 
   saveToStorage("userScore", score);
 
